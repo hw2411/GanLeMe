@@ -28,7 +28,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private FrameLayout ly_content;
 
     //Fragment Object
-    private MyFragment fg1,fg2,fg3,fg4;
+    private MyFragment fg2,fg3,fg4;
+    private PlanSetFragment fg1;
     private FragmentManager fManager;
 
     @Override
@@ -81,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_channel.setSelected(true);
                 if(fg1 == null){
-                    fg1 = new MyFragment("µÚÒ»¸öFragment");
+                    fg1 = new PlanSetFragment(this);
                     fTransaction.add(R.id.ly_content,fg1);
                 }else{
                     fTransaction.show(fg1);
