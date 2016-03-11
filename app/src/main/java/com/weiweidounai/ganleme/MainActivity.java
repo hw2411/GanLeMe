@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.FrameLayout;
 
 
@@ -28,8 +27,9 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private FrameLayout ly_content;
 
     //Fragment Object
-    private MyFragment fg2,fg3,fg4;
-    private PlanSetFragment fg1;
+    private MyFragment fg2,fg3;
+    private PlanDataFragment fg1;
+    private PlanSetFragment fg4;
     private FragmentManager fManager;
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_channel.setSelected(true);
                 if(fg1 == null){
-                    fg1 = new PlanSetFragment(this);
+                    fg1 = new PlanDataFragment(this);
                     fTransaction.add(R.id.ly_content,fg1);
                 }else{
                     fTransaction.show(fg1);
@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_setting.setSelected(true);
                 if(fg4 == null){
-                    fg4 = new MyFragment("µÚËÄ¸öFragment");
+                    fg4 = new PlanSetFragment(this);
                     fTransaction.add(R.id.ly_content,fg4);
                 }else{
                     fTransaction.show(fg4);

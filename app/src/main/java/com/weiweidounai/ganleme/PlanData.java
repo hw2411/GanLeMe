@@ -3,14 +3,15 @@ package com.weiweidounai.ganleme;
 /**
  * Created by haha on 2016/3/7.
  */
-public class PlanType {
+public class PlanData {
     private int imgId;
     private String planType;
     private int planComplete;
 
-    public PlanType(int imgId, String planType) {
+    public PlanData(int imgId, String planType,int planComplete) {
         this.planType = planType;
         this.imgId=imgId;
+        this.planComplete=planComplete;
     }
 
     public int getImgId() {

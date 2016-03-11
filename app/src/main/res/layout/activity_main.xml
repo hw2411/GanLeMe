@@ -18,7 +18,7 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="@color/text_topbar"
-            android:text="信息"/>
+            android:text="干了么"/>
 
 
         <View

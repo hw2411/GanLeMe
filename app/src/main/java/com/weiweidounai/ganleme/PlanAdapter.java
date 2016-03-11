@@ -4,13 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -18,14 +18,16 @@ import java.util.LinkedList;
  */
 public class PlanAdapter extends BaseAdapter {
     private Context mContext;
-    private LinkedList<PlanType> mData;
+    private LinkedList<PlanData> mData;
+    private FileHelper fileHelper;
 
     public PlanAdapter() {
     }
 
-    public PlanAdapter(LinkedList<PlanType> mData, Context mContext) {
+    public PlanAdapter(LinkedList<PlanData> mData, Context mContext) {
         this.mData = mData;
         this.mContext = mContext;
+        this.fileHelper = new FileHelper(mContext);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class PlanAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_plan_set, parent, false);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_plan, parent, false);
             holder = new ViewHolder();
             holder.img_icon = (ImageView) convertView.findViewById(R.id.img_icon);
             holder.text_plan_type = (TextView) convertView.findViewById(R.id.txt_type);
@@ -61,11 +63,12 @@ public class PlanAdapter extends BaseAdapter {
         holder.text_plan_type.setText(mData.get(position).getPlanType());
         Sbarlistener sblistener = new Sbarlistener(null,position);
         holder.sb_plan_complete.setOnSeekBarChangeListener(sblistener);
+        holder.sb_plan_complete.setProgress(mData.get(position).getPlanComplete());
         return convertView;
     }
 
     //添加一个元素
-    public void add(PlanType data) {
+    public void add(PlanData data) {
         if (mData == null) {
             mData = new LinkedList<>();
         }
@@ -74,7 +77,7 @@ public class PlanAdapter extends BaseAdapter {
     }
 
     //往特定位置，添加一个元素
-    public void add(int position,PlanType data){
+    public void add(int position,PlanData data){
         if (mData == null) {
             mData = new LinkedList<>();
         }
@@ -82,7 +85,7 @@ public class PlanAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void remove(PlanType data) {
+    public void remove(PlanData data) {
         if(mData != null) {
             mData.remove(data);
         }
@@ -132,7 +135,13 @@ public class PlanAdapter extends BaseAdapter {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            Toast.makeText(mContext, "release SeekBar:pos:"+temppos+",value:"+p_val, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, "release SeekBar:pos:"+temppos+",value:"+p_val, Toast.LENGTH_SHORT).show();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            try{
+                fileHelper.savePlanData(df.format(new Date()), temppos + "," + p_val);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
