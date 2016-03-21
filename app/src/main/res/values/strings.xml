@@ -12,7 +12,8 @@
     <string name="tab_menu_setting">设置</string>
     <string name="text_data_title">今日完成度</string>
     <string name="text_set_title">已有习惯</string>
-    <string name="text_set_add_pan">添加一个习惯</string>
+    <string name="text_set_add_plan">添加一个习惯</string>
+    <string name="text_set_del_plan">删除一个习惯</string>
 
 
 

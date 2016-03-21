@@ -61,9 +61,11 @@ public class PlanAdapter extends BaseAdapter {
         }
         holder.img_icon.setImageResource(mData.get(position).getImgId());
         holder.text_plan_type.setText(mData.get(position).getPlanType());
-        Sbarlistener sblistener = new Sbarlistener(null,position);
+        Sbarlistener sblistener = new Sbarlistener(mData.get(position).getPlanType(),position);
         holder.sb_plan_complete.setOnSeekBarChangeListener(sblistener);
-        holder.sb_plan_complete.setProgress(mData.get(position).getPlanComplete());
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        int progress = fileHelper.getPanComplete(mData.get(position).getPlanType(),df.format(new Date()));
+        holder.sb_plan_complete.setProgress(progress);
         return convertView;
     }
 
@@ -116,11 +118,11 @@ public class PlanAdapter extends BaseAdapter {
         SeekBar sb_plan_complete;
     }
     private class Sbarlistener implements SeekBar.OnSeekBarChangeListener {
-        TextView tempview;
+        String planType;
         int temppos;
         int p_val;
-        public Sbarlistener(TextView tv,int pos){
-            tempview=tv;
+        public Sbarlistener(String pt,int pos){
+            planType=pt;
             temppos=pos;
             p_val=1;
         }
@@ -138,7 +140,7 @@ public class PlanAdapter extends BaseAdapter {
 //            Toast.makeText(mContext, "release SeekBar:pos:"+temppos+",value:"+p_val, Toast.LENGTH_SHORT).show();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             try{
-                fileHelper.savePlanData(df.format(new Date()), temppos + "," + p_val);
+                fileHelper.savePlanData(df.format(new Date()), planType + "," + p_val);
             }catch (Exception e) {
                 e.printStackTrace();
             }

@@ -17,12 +17,6 @@
             android:textSize="20sp"
             android:gravity="center_vertical|center_horizontal" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textSetPlans"
-            android:layout_gravity="center_horizontal|left" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -35,11 +29,24 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_set_add_pan"
+                android:text="@string/text_set_add_plan"
                 android:id="@+id/btn_plan_add" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_set_del_plan"
+                android:id="@+id/btn_plan_del" />
 
 
         </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textSetPlans"
+            android:textSize="20sp"
+            android:layout_gravity="center_horizontal|left" />
+
+
 
     </LinearLayout>
 </LinearLayout>

@@ -85,6 +85,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                     fg1 = new PlanDataFragment(this);
                     fTransaction.add(R.id.ly_content,fg1);
                 }else{
+                    fg1.reload();
                     fTransaction.show(fg1);
                 }
                 break;

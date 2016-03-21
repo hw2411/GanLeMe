@@ -24,8 +24,7 @@ public class PlanDataFragment extends Fragment implements View.OnClickListener {
     private PlanAdapter mAdapter = null;
     private List<PlanData> mData = null;
     private int flag = 1;
-    private String plans="跑步,阅读,行走,学习";
-     public PlanDataFragment(){
+    public PlanDataFragment(){
     };
     @SuppressLint("ValidFragment")
     public PlanDataFragment(Context content) {
@@ -42,13 +41,7 @@ public class PlanDataFragment extends Fragment implements View.OnClickListener {
         list_plan_set.setAdapter(mAdapter);
         add_plan.setOnClickListener(this);
         add_plan.setVisibility(View.GONE);
-        String[] plan = plans.split(",");
-        int[] imgs = {R.mipmap.run,R.mipmap.reed,R.mipmap.walk,R.mipmap.study};
-        FileHelper fileHelper=new FileHelper(content);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        for(int i=0;i<plan.length;i++){
-            mAdapter.add(new PlanData(imgs[i],plan[i],fileHelper.getPanComplete(i,df.format(new Date()))));
-        }
+        reload();
 
         return view;
     }
@@ -57,5 +50,18 @@ public class PlanDataFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
 
         flag++;
+    }
+
+    public void reload(){
+        int[] imgs = {R.mipmap.a,R.mipmap.b,R.mipmap.c,R.mipmap.d,R.mipmap.e,R.mipmap.f};
+        FileHelper fileHelper=new FileHelper(content);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String[] plans = fileHelper.getFileStrings("plansInSet");
+        mAdapter.clear();
+        if(plans!=null&&!"".equals(plans[0])){
+            for(int i=0;i<plans.length;i++){
+                mAdapter.add(new PlanData(imgs[(plans.length-1-i)%6],plans[i],0));
+            }
+        }
     }
 }
