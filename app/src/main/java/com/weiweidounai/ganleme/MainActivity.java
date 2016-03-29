@@ -27,9 +27,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private FrameLayout ly_content;
 
     //Fragment Object
-    private MyFragment fg2,fg3;
+    private MyFragment fg3;
     private PlanDataFragment fg1;
     private PlanSetFragment fg4;
+    private StatisticsFragment fg2;
     private FragmentManager fManager;
 
     @Override
@@ -69,7 +70,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     //隐藏所有Fragment
     private void hideAllFragment(FragmentTransaction fragmentTransaction){
         if(fg1 != null)fragmentTransaction.hide(fg1);
-        if(fg2 != null)fragmentTransaction.hide(fg2);
+        if(fg2 != null){
+            fg2.histogramView.clearAnimation();
+            fragmentTransaction.hide(fg2);
+        }
         if(fg3 != null)fragmentTransaction.hide(fg3);
         if(fg4 != null)fragmentTransaction.hide(fg4);
     }
@@ -93,10 +97,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_message.setSelected(true);
                 if(fg2 == null){
-                    fg2 = new MyFragment("第二个Fragment");
+                    fg2 = new StatisticsFragment(this);
                     fTransaction.add(R.id.ly_content,fg2);
                 }else{
                     fTransaction.show(fg2);
+                    fg2.histogramView.start(2);
                 }
                 break;
             case R.id.txt_better:
