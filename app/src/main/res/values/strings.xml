@@ -6,9 +6,9 @@
 
 
 
-    <string name="tab_menu_alert">完成度</string>
-    <string name="tab_menu_profile">信息</string>
-    <string name="tab_menu_pay">我的</string>
+    <string name="tab_menu_data">完成度</string>
+    <string name="tab_menu_week">周统计</string>
+    <string name="tab_menu_month">月统计</string>
     <string name="tab_menu_setting">设置</string>
     <string name="text_data_title">今日完成度</string>
     <string name="text_set_title">已有习惯</string>

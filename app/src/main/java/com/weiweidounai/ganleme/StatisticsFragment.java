@@ -19,10 +19,10 @@ public class StatisticsFragment extends Fragment {
 
     };
     @SuppressLint("ValidFragment")
-    public StatisticsFragment(Context content) {
+    public StatisticsFragment(Context content,int stype) {
         this.content = content;
         this.fileHelper = new FileHelper(content);
-        this.histogramView=new HistogramView(content);
+        this.histogramView=new HistogramView(content,stype);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

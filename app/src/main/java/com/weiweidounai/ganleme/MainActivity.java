@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private FrameLayout ly_content;
 
     //Fragment Object
-    private MyFragment fg3;
+    private StatisticsFragment fg3;
     private PlanDataFragment fg1;
     private PlanSetFragment fg4;
     private StatisticsFragment fg2;
@@ -74,7 +74,10 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             fg2.histogramView.clearAnimation();
             fragmentTransaction.hide(fg2);
         }
-        if(fg3 != null)fragmentTransaction.hide(fg3);
+        if(fg3 != null){
+            fg3.histogramView.clearAnimation();
+            fragmentTransaction.hide(fg3);
+        }
         if(fg4 != null)fragmentTransaction.hide(fg4);
     }
     @Override
@@ -97,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_message.setSelected(true);
                 if(fg2 == null){
-                    fg2 = new StatisticsFragment(this);
+                    fg2 = new StatisticsFragment(this,0);
                     fTransaction.add(R.id.ly_content,fg2);
                 }else{
                     fTransaction.show(fg2);
@@ -108,10 +111,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
                 setSelected();
                 txt_better.setSelected(true);
                 if(fg3 == null){
-                    fg3 = new MyFragment("µÚÈý¸öFragment");
+                    fg3 = new StatisticsFragment(this,1);
                     fTransaction.add(R.id.ly_content,fg3);
                 }else{
                     fTransaction.show(fg3);
+                    fg3.histogramView.start(2);
                 }
                 break;
             case R.id.txt_setting:

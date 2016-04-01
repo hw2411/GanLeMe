@@ -19,28 +19,36 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+import java.util.ArrayList;
+
 public class HistogramView extends View {
 
     private Paint xLinePaint;// 坐标轴 轴线 画笔：
     private Paint hLinePaint;// 坐标轴水平内部 虚线画笔
     private Paint titlePaint;// 绘制文本的画笔
     private Paint paint;// 矩形画笔 柱状图的样式信息
-    private int[] progress = { 1000, 2000, 3000, 4000, 5000, 8000, 10000 };// 7
+    ArrayList<Integer> progress ;
     // 条，显示各个柱状的数据
-    private int[] aniProgress;// 实现动画的值
+    ArrayList<Integer> aniProgress;// 实现动画的值
     private final int TRUE = 1;// 在柱状图上显示数字
-    private int[] text;// 设置点击事件，显示哪一条柱状的信息
+    ArrayList<Integer> text;// 设置点击事件，显示哪一条柱状的信息
     private Bitmap bitmap;
     // 坐标轴左侧的数标
     private String[] ySteps;
-    // 坐标轴底部的星期数
-    private String[] xWeeks;
+    // 坐标轴底部的习惯
+    private String[] xPlans;
     private int flag;// 是否使用动画
+    FileHelper fileHelper;
+    DataStatistics dataStatistics;
+    int sttpye=0;
 
     private HistogramAnimation ani;
 
-    public HistogramView(Context context) {
+    public HistogramView(Context context,int stype) {
         super(context);
+        fileHelper=new FileHelper(context);
+        dataStatistics=new DataStatistics(context);
+        this.sttpye=stype;
         init();
         start(2);
     }
@@ -52,12 +60,23 @@ public class HistogramView extends View {
 
     private void init() {
 
-        ySteps = new String[] { "10k", "7.5k", "5k", "2.5k", "0" };
-        xWeeks = new String[] { "周一", "周二", "周三", "周四", "周五", "周六", "周日" };
-        text = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-        aniProgress = new int[] { 0, 0, 0, 0, 0, 0, 0 };;
+        ySteps = new String[] { "100%", "75%", "50%", "25%", "0%" };
+        xPlans = fileHelper.getFileStrings("plansInSet");
+        aniProgress = new ArrayList<Integer>();
+        text = new ArrayList<Integer>();
+        if(this.sttpye==0)
+            progress=dataStatistics.StatisticsComplete(new DaysCount().getWeekdays());
+        else
+            progress=dataStatistics.StatisticsComplete(new DaysCount().getMonthdays());
+        aniProgress.clear();
+        text.clear();
+        for (int i = 0; i < progress.size(); i++) {
+            aniProgress.add(0) ;
+            text.add(0) ;
+        }
+
         ani = new HistogramAnimation();
-        ani.setDuration(2000);
+        ani.setDuration(1000);
 
         xLinePaint = new Paint();
         hLinePaint = new Paint();
@@ -75,6 +94,17 @@ public class HistogramView extends View {
     }
 
     public void start(int flag) {
+        xPlans = fileHelper.getFileStrings("plansInSet");
+        if(this.sttpye==0)
+            progress=dataStatistics.StatisticsComplete(new DaysCount().getWeekdays());
+        else
+            progress=dataStatistics.StatisticsComplete(new DaysCount().getMonthdays());
+        aniProgress.clear();
+        text.clear();
+        for (int i = 0; i < progress.size(); i++) {
+            aniProgress.add(0) ;
+            text.add(0) ;
+        }
         this.flag = flag;
         this.startAnimation(ani);
     }
@@ -114,41 +144,44 @@ public class HistogramView extends View {
 
         // 绘制 X 周 做坐标
         int xAxisLength = width - dp2px(30);
-        int columCount = xWeeks.length + 1;
-        int step = xAxisLength / columCount;
+        if(xPlans!=null&&!"".equals(xPlans[0])){
+            int columCount = xPlans.length + 1;
+            int step = xAxisLength / columCount;
 
-        // 设置底部的数字
-        for (int i = 0; i < columCount - 1; i++) {
-            // text, baseX, baseY, textPaint
-            canvas.drawText(xWeeks[i], dp2px(25) + step * (i + 1), height
-                    + dp2px(20), titlePaint);
-        }
+            // 设置底部的数字
+            for (int i = 0; i < columCount - 1; i++) {
+                // text, baseX, baseY, textPaint
+                canvas.drawText(xPlans[i], dp2px(25) + step * (i + 1), height
+                        + dp2px(20), titlePaint);
+            }
+            // 绘制矩形
+            if (aniProgress != null && aniProgress.size() > 0) {
+                for (int i = 0; i < aniProgress.size(); i++) {// 循环遍历将柱状图形画出来
+                    int value = aniProgress.get(i);
+                    paint.setAntiAlias(true);// 抗锯齿效果
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setTextSize(sp2px(15));// 字体大小
+                    paint.setColor(Color.parseColor("#6DCAEC"));// 字体颜色
+                    Rect rect = new Rect();// 柱状图的形状
 
-        // 绘制矩形
-        if (aniProgress != null && aniProgress.length > 0) {
-            for (int i = 0; i < aniProgress.length; i++) {// 循环遍历将7条柱状图形画出来
-                int value = aniProgress[i];
-                paint.setAntiAlias(true);// 抗锯齿效果
-                paint.setStyle(Paint.Style.FILL);
-                paint.setTextSize(sp2px(15));// 字体大小
-                paint.setColor(Color.parseColor("#6DCAEC"));// 字体颜色
-                Rect rect = new Rect();// 柱状图的形状
+                    rect.left = step * (i + 1);
+                    rect.right = dp2px(30) + step * (i + 1);
+                    int rh = (int) (leftHeight - leftHeight * (value / 100.0));
+                    rect.top = rh + dp2px(10);
+                    rect.bottom = height;
 
-                rect.left = step * (i + 1);
-                rect.right = dp2px(30) + step * (i + 1);
-                int rh = (int) (leftHeight - leftHeight * (value / 10000.0));
-                rect.top = rh + dp2px(10);
-                rect.bottom = height;
+                    canvas.drawBitmap(bitmap, null, rect, paint);
+                    // 是否显示柱状图上方的数字
+                    if (this.text.get(i) == TRUE) {
+                        canvas.drawText(value + "%", dp2px(15) + step * (i + 1)
+                                - dp2px(15), rh + dp2px(5), paint);
+                    }
 
-                canvas.drawBitmap(bitmap, null, rect, paint);
-                // 是否显示柱状图上方的数字
-                if (this.text[i] == TRUE) {
-                    canvas.drawText(value + "", dp2px(15) + step * (i + 1)
-                            - dp2px(15), rh + dp2px(5), paint);
                 }
-
             }
         }
+
+
 
     }
 
@@ -166,15 +199,15 @@ public class HistogramView extends View {
      * 设置点击事件，是否显示数字
      */
     public boolean onTouchEvent(MotionEvent event) {
-        int step = (getWidth() - dp2px(30)) / 8;
+        int step = (getWidth() - dp2px(30)) / (text.size()+1);
         int x = (int) event.getX();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < text.size(); i++) {
             if (x > (dp2px(15) + step * (i + 1) - dp2px(15))
                     && x < (dp2px(15) + step * (i + 1) + dp2px(15))) {
-                text[i] = 1;
-                for (int j = 0; j < 7; j++) {
+                text.set(i,1);
+                for (int j = 0; j < text.size(); j++) {
                     if (i != j) {
-                        text[j] = 0;
+                        text.set(j,0);
                     }
                 }
                 if (Looper.getMainLooper() == Looper.myLooper()) {
@@ -197,12 +230,12 @@ public class HistogramView extends View {
                                            Transformation t) {
             super.applyTransformation(interpolatedTime, t);
             if (interpolatedTime < 1.0f && flag == 2) {
-                for (int i = 0; i < aniProgress.length; i++) {
-                    aniProgress[i] = (int) (progress[i] * interpolatedTime);
+                for (int i = 0; i < aniProgress.size(); i++) {
+                    aniProgress.set(i,(int) (progress.get(i) * interpolatedTime))  ;
                 }
             } else {
-                for (int i = 0; i < aniProgress.length; i++) {
-                    aniProgress[i] = progress[i];
+                for (int i = 0; i < aniProgress.size(); i++) {
+                    aniProgress.set(i,progress.get(i)) ;
                 }
             }
             invalidate();
